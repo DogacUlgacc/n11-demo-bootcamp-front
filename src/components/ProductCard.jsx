@@ -1,38 +1,39 @@
-import { Link } from 'react-router-dom'
+function ProductCard({ product, onAddToCart }) {
+  const formattedPrice = new Intl.NumberFormat("tr-TR", {
+    style: "currency",
+    currency: product.currency || "TRY",
+  }).format(product.amount || 0);
 
-function ProductCard({ product }) {
+  const productInitial =
+    product.productName?.charAt(0).toLocaleUpperCase("tr-TR") || "n";
+  const hasStock = Number(product.stockQuantity) > 0;
+
   return (
-    <article className="product-card">
-      <Link to={`/products/${product.id}`} className="product-image-link">
-        <img
-          src={product.imageUrl || product.image || 'https://placehold.co/480x360?text=Product'}
-          alt={product.name || product.title}
-          className="product-image"
-        />
-      </Link>
-      <div className="product-card-body">
-        <h2>{product.name || product.title}</h2>
-        <p>{product.description || 'Ürün detaylarını görmek için karta tıklayın.'}</p>
-        <div className="product-card-footer">
-          <strong>{formatPrice(product.price)}</strong>
-          <Link to={`/products/${product.id}`} className="button">
-            Detay
-          </Link>
-        </div>
+    <div className="product-card">
+      <div className="product-media">
+        <span className={hasStock ? "stock-badge" : "stock-badge out"}>
+          {hasStock ? "Stokta" : "Tükendi"}
+        </span>
+        <span className="product-initial">{productInitial}</span>
       </div>
-    </article>
-  )
+      <div className="product-content">
+        <span className="shipping-badge">n11 hızlı teslimat</span>
+        <h3>{product.productName}</h3>
+        <p>{product.productDescription}</p>
+        <div className="price-row">
+          <strong>{formattedPrice}</strong>
+          <span>Stok: {product.stockQuantity ?? "-"}</span>
+        </div>
+        <button
+          type="button"
+          disabled={!hasStock}
+          onClick={() => onAddToCart(product)}
+        >
+          Sepete Ekle
+        </button>
+      </div>
+    </div>
+  );
 }
 
-function formatPrice(price) {
-  if (price === undefined || price === null) {
-    return 'Fiyat yok'
-  }
-
-  return new Intl.NumberFormat('tr-TR', {
-    style: 'currency',
-    currency: 'TRY',
-  }).format(price)
-}
-
-export default ProductCard
+export default ProductCard;
