@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 function ProductCard({ product, onAddToCart }) {
   const formattedPrice = new Intl.NumberFormat("tr-TR", {
     style: "currency",
@@ -10,12 +12,16 @@ function ProductCard({ product, onAddToCart }) {
 
   return (
     <div className="product-card">
-      <div className="product-media">
+      <Link
+        className="product-media"
+        to={`/products/${product.id}`}
+        aria-label={`${product.productName} detay sayfası`}
+      >
         <span className={hasStock ? "stock-badge" : "stock-badge out"}>
           {hasStock ? "Stokta" : "Tükendi"}
         </span>
         <span className="product-initial">{productInitial}</span>
-      </div>
+      </Link>
       <div className="product-content">
         <span className="shipping-badge">n11 hızlı teslimat</span>
         <h3>{product.productName}</h3>
