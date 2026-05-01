@@ -279,9 +279,9 @@ function ProductListPage() {
           </label>
 
           <div className="header-actions">
-            <button type="button" className="ghost-button">
+            <Link to="/account" className="ghost-button">
               Hesabım
-            </button>
+            </Link>
             <Link to="/cart" className="cart-button">
               Sepetim
             </Link>

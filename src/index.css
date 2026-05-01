@@ -977,6 +977,93 @@ p {
   gap: 10px;
 }
 
+.account-page {
+  display: grid;
+  gap: 18px;
+}
+
+.account-page .section-heading h1 {
+  color: var(--color-ink);
+  font-size: 30px;
+  line-height: 1.18;
+}
+
+.account-layout {
+  display: grid;
+  grid-template-columns: 280px minmax(0, 1fr);
+  gap: 20px;
+  align-items: start;
+}
+
+.account-summary,
+.account-card,
+.account-addresses,
+.address-card {
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  background: var(--color-surface);
+  box-shadow: 0 8px 22px var(--color-shadow);
+}
+
+.account-summary {
+  display: grid;
+  justify-items: center;
+  gap: 10px;
+  padding: 22px;
+  text-align: center;
+}
+
+.account-avatar {
+  display: grid;
+  place-items: center;
+  width: 82px;
+  height: 82px;
+  border-radius: 50%;
+  color: var(--color-accent);
+  background: var(--color-primary);
+  font-size: 38px;
+  font-weight: 900;
+}
+
+.account-summary h2 {
+  color: var(--color-ink);
+  font-size: 22px;
+}
+
+.account-summary p {
+  color: var(--color-muted);
+  font-weight: 900;
+}
+
+.account-card,
+.account-addresses {
+  padding: 18px;
+}
+
+.account-addresses {
+  grid-column: 1 / -1;
+  display: grid;
+  gap: 14px;
+}
+
+.address-card {
+  display: grid;
+  gap: 6px;
+  padding: 16px;
+  box-shadow: none;
+}
+
+.address-card h3 {
+  color: var(--color-ink);
+  font-size: 18px;
+}
+
+.address-card p,
+.address-card span {
+  color: var(--color-muted);
+  line-height: 1.5;
+}
+
 @media (max-width: 1120px) {
   .dashboard-grid {
     grid-template-columns: 1fr;
@@ -1026,6 +1113,10 @@ p {
 
   .cart-summary {
     position: static;
+  }
+
+  .account-layout {
+    grid-template-columns: 1fr;
   }
 }
 
