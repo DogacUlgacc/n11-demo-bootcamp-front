@@ -394,7 +394,11 @@ function ProductListPage() {
                     : "Oluştur"}
               </button>
               {editingProduct && (
-                <button type="button" className="ghost-button" onClick={resetForm}>
+                <button
+                  type="button"
+                  className="ghost-button"
+                  onClick={resetForm}
+                >
                   Vazgeç
                 </button>
               )}
@@ -417,8 +421,8 @@ function ProductListPage() {
                   <option value="id:asc">Varsayılan</option>
                   <option value="productName:asc">Ada göre artan</option>
                   <option value="productName:desc">Ada göre azalan</option>
-                  <option value="amount:asc">Fiyat artan</option>
-                  <option value="amount:desc">Fiyat azalan</option>
+                  <option value="price.amount:asc">Fiyat artan</option>
+                  <option value="price.amount:desc">Fiyat azalan</option>
                 </select>
                 <select
                   value={size}
@@ -444,7 +448,10 @@ function ProductListPage() {
             <div className="product-list">
               {visibleProducts.map((product) => (
                 <div className="product-shell" key={product.id}>
-                  <ProductCard product={product} onAddToCart={handleAddToCart} />
+                  <ProductCard
+                    product={product}
+                    onAddToCart={handleAddToCart}
+                  />
                   <div className="product-admin-actions">
                     <button type="button" onClick={() => handleEdit(product)}>
                       Düzenle

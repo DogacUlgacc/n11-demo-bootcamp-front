@@ -81,7 +81,10 @@ function CartPage() {
   }, []);
 
   const itemCount = useMemo(() => {
-    return (cart?.items || []).reduce((total, item) => total + item.quantity, 0);
+    return (cart?.items || []).reduce(
+      (total, item) => total + item.quantity,
+      0,
+    );
   }, [cart]);
 
   const formatMoney = (amount) => {
@@ -189,7 +192,9 @@ function CartPage() {
 
           {loading && <p className="info-message">Sepet yükleniyor...</p>}
           {error && <p className="error-message">{error}</p>}
-          {successMessage && <p className="success-message">{successMessage}</p>}
+          {successMessage && (
+            <p className="success-message">{successMessage}</p>
+          )}
 
           {!loading && cart && (
             <div className="cart-layout">
@@ -213,7 +218,9 @@ function CartPage() {
                       </Link>
 
                       <div className="cart-item-content">
-                        <h2>{product?.productName || "Ürün bilgisi alınamadı"}</h2>
+                        <h2>
+                          {product?.productName || "Ürün bilgisi alınamadı"}
+                        </h2>
                         <p>{product?.productDescription || item.productId}</p>
                         <strong>{formatMoney(item.unitPrice)}</strong>
                       </div>
@@ -255,8 +262,8 @@ function CartPage() {
               <aside className="cart-summary">
                 <h2>Sipariş Özeti</h2>
                 <div>
-                  <span>Sepet ID</span>
-                  <strong>{cart.cartId}</strong>
+                  <span>Sepet Türü</span>
+                  <strong>Customer</strong>
                 </div>
                 <div>
                   <span>Toplam ürün</span>
@@ -271,7 +278,9 @@ function CartPage() {
                   disabled={(cart.items || []).length === 0 || checkingOut}
                   onClick={handleCheckout}
                 >
-                  {checkingOut ? "Sipariş oluşturuluyor..." : "Alışverişi Tamamla"}
+                  {checkingOut
+                    ? "Sipariş oluşturuluyor..."
+                    : "Alışverişi Tamamla"}
                 </button>
               </aside>
             </div>
