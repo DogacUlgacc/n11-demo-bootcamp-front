@@ -1,10 +1,14 @@
-import axiosInstance from "./axiosInstance";
+import { apiFetch } from "./ApiClient";
 
-export const checkoutOrder = async ({ userId, cartId }) => {
-  const response = await axiosInstance.post("/api/v1/orders/checkout", {
-    userId,
-    cartId,
-  });
-
-  return response.data;
+export const checkoutOrder = async ({ cartId }) => {
+  return apiFetch(
+    "/api/v1/orders/checkout",
+    {
+      method: "POST",
+      body: JSON.stringify({
+        cartId,
+      }),
+    },
+    true,
+  );
 };

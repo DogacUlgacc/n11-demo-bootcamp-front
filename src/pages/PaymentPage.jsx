@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useLocation, useParams } from "react-router-dom";
-import { clearStoredCartId } from "../api/CartApi";
+import { clearStoredCartId } from "../api/cartApi";
 import { getPaymentById, payWithCard } from "../api/paymentApi";
 import { getApiErrorMessage } from "../api/productApi";
 

@@ -1,26 +1,27 @@
-import axiosInstance from "./axiosInstance";
+import { apiFetch } from "./ApiClient";
 
 export const createPayment = async ({ orderId, userId, amount, currency }) => {
-  const response = await axiosInstance.post("/api/v1/payments", {
-    orderId,
-    userId,
-    amount,
-    currency,
-  });
-
-  return response.data;
+  return apiFetch(
+    "/api/v1/payments",
+    {
+      method: "POST",
+      body: JSON.stringify({
+        orderId,
+        userId,
+        amount,
+        currency,
+      }),
+    },
+    true,
+  );
 };
 
 export const getPayments = async () => {
-  const response = await axiosInstance.get("/api/v1/payments");
-
-  return response.data;
+  return apiFetch("/api/v1/payments", {}, true);
 };
 
 export const getPaymentById = async (paymentId) => {
-  const response = await axiosInstance.get(`/api/v1/payments/${paymentId}`);
-
-  return response.data;
+  return apiFetch(`/api/v1/payments/${paymentId}`, {}, true);
 };
 
 export const waitForPaymentByOrderId = async (
@@ -44,18 +45,22 @@ export const waitForPaymentByOrderId = async (
 };
 
 export const completePayment = async (paymentId) => {
-  const response = await axiosInstance.post(
+  return apiFetch(
     `/api/v1/payments/${paymentId}/complete`,
+    {
+      method: "POST",
+    },
+    true,
   );
-
-  return response.data;
 };
 
 export const payWithCard = async (paymentId, card) => {
-  const response = await axiosInstance.post(
+  return apiFetch(
     `/api/v1/payments/${paymentId}/pay`,
-    card,
+    {
+      method: "POST",
+      body: JSON.stringify(card),
+    },
+    true,
   );
-
-  return response.data;
 };

@@ -1,6 +1,27 @@
 import axiosInstance from "./axiosInstance";
+import keycloak from "../keycloack";
 
 const CART_ID_STORAGE_KEY = "3d5cefed-2835-471e-81b0-2acb6aed28ce";
+
+const redirectToLogin = () => {
+  const from = `${window.location.pathname}${window.location.search}`;
+  window.location.assign(`/login?from=${encodeURIComponent(from)}`);
+};
+
+const getAuthConfig = async () => {
+  if (!keycloak.authenticated) {
+    redirectToLogin();
+    return null;
+  }
+
+  await keycloak.updateToken(30);
+
+  return {
+    headers: {
+      Authorization: `Bearer ${keycloak.token}`,
+    },
+  };
+};
 
 export const getStoredCartId = () => {
   return localStorage.getItem(CART_ID_STORAGE_KEY);
@@ -17,10 +38,20 @@ export const clearStoredCartId = () => {
 };
 
 export const createCart = async (userId, currency = "TRY") => {
-  const response = await axiosInstance.post("/api/v1/carts", {
-    userId,
-    currency,
-  });
+  const authConfig = await getAuthConfig();
+
+  if (!authConfig) {
+    return null;
+  }
+
+  const response = await axiosInstance.post(
+    "/api/v1/carts",
+    {
+      userId,
+      currency,
+    },
+    authConfig,
+  );
 
   storeCartId(response.data?.cartId);
 
@@ -36,11 +67,20 @@ export const ensureCart = async (userId, currency = "TRY") => {
 
   const cart = await createCart(userId, currency);
 
-  return cart.cartId;
+  return cart?.cartId;
 };
 
 export const getCartById = async (cartId) => {
-  const response = await axiosInstance.get(`/api/v1/carts/${cartId}`);
+  const authConfig = await getAuthConfig();
+
+  if (!authConfig) {
+    return null;
+  }
+
+  const response = await axiosInstance.get(
+    `/api/v1/carts/${cartId}`,
+    authConfig,
+  );
 
   return response.data;
 };
@@ -57,26 +97,71 @@ export const addProductToCart = async (
   quantity = 1,
   currency = "TRY",
 ) => {
+  const authConfig = await getAuthConfig();
+
+  if (!authConfig) {
+    return null;
+  }
+
   await ensureCart(userId, currency);
 
-  const response = await axiosInstance.post("/api/v1/carts/items", {
-    userId,
-    productId,
-    quantity,
-  });
+  const response = await axiosInstance.post(
+    "/api/v1/carts/items",
+    {
+      userId,
+      productId,
+      quantity,
+    },
+    authConfig,
+  );
+
+  return response.data;
+};
+
+export const addToCart = async (productId, quantity = 1) => {
+  const authConfig = await getAuthConfig();
+
+  if (!authConfig) {
+    return null;
+  }
+
+  const response = await axiosInstance.post(
+    "/api/v1/carts/items",
+    {
+      productId,
+      quantity,
+    },
+    authConfig,
+  );
 
   return response.data;
 };
 
 export const updateCartItemQuantity = async (cartId, productId, quantity) => {
+  const authConfig = await getAuthConfig();
+
+  if (!authConfig) {
+    return null;
+  }
+
   const response = await axiosInstance.put(
     `/api/v1/carts/${cartId}/items/${productId}`,
     { quantity },
+    authConfig,
   );
 
   return response.data;
 };
 
 export const removeCartItem = async (cartId, productId) => {
-  await axiosInstance.delete(`/api/v1/carts/${cartId}/items/${productId}`);
+  const authConfig = await getAuthConfig();
+
+  if (!authConfig) {
+    return;
+  }
+
+  await axiosInstance.delete(
+    `/api/v1/carts/${cartId}/items/${productId}`,
+    authConfig,
+  );
 };

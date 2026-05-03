@@ -1,9 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { addProductToCart } from "../api/CartApi";
+import { addToCart } from "../api/cartApi";
 import { getApiErrorMessage, getProductById } from "../api/productApi";
-
-const userId = "07ed7f7a-1340-431a-a564-f1932498dc99";
 
 function ProductDetailPage() {
   const { id } = useParams();
@@ -12,6 +10,20 @@ function ProductDetailPage() {
   const [adding, setAdding] = useState(false);
   const [error, setError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
+
+  useEffect(() => {
+    if (!successMessage) {
+      return undefined;
+    }
+
+    const timeoutId = window.setTimeout(() => {
+      setSuccessMessage("");
+    }, 3000);
+
+    return () => {
+      window.clearTimeout(timeoutId);
+    };
+  }, [successMessage]);
 
   useEffect(() => {
     let ignore = false;
@@ -55,11 +67,11 @@ function ProductDetailPage() {
       setError("");
       setSuccessMessage("");
 
-      await addProductToCart(userId, product.id, 1, product.currency || "TRY");
-
+      await addToCart(product.id, 1);
       setSuccessMessage(`${product.productName} sepete eklendi.`);
     } catch (err) {
-      setError(getApiErrorMessage(err));
+      console.error(err);
+      setError("Sepete eklenemedi, tekrar deneyin");
     } finally {
       setAdding(false);
     }
@@ -82,7 +94,7 @@ function ProductDetailPage() {
           </Link>
           <div className="detail-header-actions">
             <Link className="back-link" to="/">
-              Ürünlere dön
+              Urunlere don
             </Link>
             <Link className="cart-button" to="/cart">
               Sepetim
@@ -92,7 +104,7 @@ function ProductDetailPage() {
       </header>
 
       <main className="container">
-        {loading && <p className="info-message">Ürün detayı yükleniyor...</p>}
+        {loading && <p className="info-message">Urun detayi yukleniyor...</p>}
         {error && <p className="error-message">{error}</p>}
         {successMessage && <p className="success-message">{successMessage}</p>}
 
@@ -100,13 +112,13 @@ function ProductDetailPage() {
           <section className="product-detail">
             <div className="detail-media">
               <span className={hasStock ? "stock-badge" : "stock-badge out"}>
-                {hasStock ? "Stokta" : "Tükendi"}
+                {hasStock ? "Stokta" : "Tukendi"}
               </span>
               <span className="detail-initial">{productInitial}</span>
             </div>
 
             <div className="detail-content">
-              <span className="section-kicker">Ürün detayı</span>
+              <span className="section-kicker">Urun detayi</span>
               <h1>{product.productName}</h1>
               <p>{product.productDescription}</p>
 
@@ -120,7 +132,7 @@ function ProductDetailPage() {
                   <dd>{product.stockQuantity}</dd>
                 </div>
                 <div>
-                  <dt>Ürün Açıklaması</dt>
+                  <dt>Urun Aciklamasi</dt>
                   <dd>{product.productName}</dd>
                 </div>
               </dl>
@@ -131,7 +143,7 @@ function ProductDetailPage() {
                 disabled={!hasStock || adding}
                 onClick={handleAddToCart}
               >
-                {adding ? "Sepete ekleniyor..." : "Sepete Ekle"}
+                {adding ? "Ekleniyor..." : "Sepete Ekle"}
               </button>
             </div>
           </section>

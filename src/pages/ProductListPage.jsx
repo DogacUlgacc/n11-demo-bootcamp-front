@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { addProductToCart } from "../api/CartApi";
 import {
   createProduct,
   deleteProduct,
@@ -9,8 +8,6 @@ import {
   updateProduct,
 } from "../api/productApi";
 import ProductCard from "../components/ProductCard";
-
-const userId = "07ed7f7a-1340-431a-a564-f1932498dc99";
 
 const categories = [
   "Elektronik",
@@ -238,19 +235,6 @@ function ProductListPage() {
     }
   };
 
-  const handleAddToCart = async (product) => {
-    try {
-      setSuccessMessage("");
-      setError("");
-
-      await addProductToCart(userId, product.id, 1, product.currency || "TRY");
-
-      setSuccessMessage(`${product.productName} sepete eklendi.`);
-    } catch (err) {
-      setError(getApiErrorMessage(err));
-    }
-  };
-
   const handleSortChange = (event) => {
     const [nextSortBy, nextDirection] = event.target.value.split(":");
 
@@ -448,10 +432,7 @@ function ProductListPage() {
             <div className="product-list">
               {visibleProducts.map((product) => (
                 <div className="product-shell" key={product.id}>
-                  <ProductCard
-                    product={product}
-                    onAddToCart={handleAddToCart}
-                  />
+                  <ProductCard product={product} />
                   <div className="product-admin-actions">
                     <button type="button" onClick={() => handleEdit(product)}>
                       Düzenle

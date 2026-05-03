@@ -5,7 +5,7 @@ import {
   getCurrentCart,
   removeCartItem,
   updateCartItemQuantity,
-} from "../api/CartApi";
+} from "../api/cartApi";
 import { checkoutOrder } from "../api/orderApi";
 import { waitForPaymentByOrderId } from "../api/paymentApi";
 import { getApiErrorMessage, getProductById } from "../api/productApi";
@@ -24,6 +24,14 @@ function CartPage() {
 
   const fetchCartDetails = async () => {
     const cartData = await getCurrentCart(userId, "TRY");
+
+    if (!cartData) {
+      return {
+        cartData: null,
+        productLookup: {},
+      };
+    }
+
     const products = await Promise.all(
       (cartData.items || []).map(async (item) => {
         try {
@@ -148,7 +156,6 @@ function CartPage() {
       setSuccessMessage("");
 
       const order = await checkoutOrder({
-        userId,
         cartId: cart.cartId,
       });
 
@@ -262,8 +269,8 @@ function CartPage() {
               <aside className="cart-summary">
                 <h2>Sipariş Özeti</h2>
                 <div>
-                  <span>Sepet Türü</span>
-                  <strong>Customer</strong>
+                  <span>Sepet ID</span>
+                  <strong>{cart.cartId}</strong>
                 </div>
                 <div>
                   <span>Toplam ürün</span>

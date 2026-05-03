@@ -1,4 +1,5 @@
 import axiosInstance from "./axiosInstance";
+import { apiFetch } from "./ApiClient";
 
 export const getProducts = async ({
   page = 0,
@@ -31,9 +32,14 @@ export const getProductById = async (id) => {
 };
 
 export const createProduct = async (product) => {
-  const response = await axiosInstance.post("/api/v1/products", product);
-
-  return response.data;
+  return apiFetch(
+    "/api/v1/products",
+    {
+      method: "POST",
+      body: JSON.stringify(product),
+    },
+    true,
+  );
 };
 
 export const updateProduct = async (id, product) => {
